@@ -5,10 +5,11 @@ header('Content-Type: application/json');
 require_once '../db_connect.php';
 
 // Security: ONLY a 'super_admin' can perform this action
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SESSION['user']['role'] !== 'super_admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
     exit();
 }
+
 
 $userId = $_POST['id'] ?? 0;
 $role = $_POST['role'] ?? 'user';

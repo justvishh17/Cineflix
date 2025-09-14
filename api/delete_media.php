@@ -8,20 +8,25 @@ header('Content-Type: application/json');
 require_once '../db_connect.php';
 
 // --- Security Check: Ensure the user is an authenticated admin ---
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SESSION['user']['role'] !== 'super_admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
     exit();
 }
 
-// --- Get the Media ID from the POST request ---
-$mediaId = $_POST['id'] ?? 0;
 
-// --- Validate the received ID ---
+// --- Get the Media ID from the POST request ---
+
+
+// --- Get the Media ID from the POST request (JSON format) ---
+$data = json_decode(file_get_contents('php://input'), true);
+$mediaId = $data['id'] ?? 0;
+// --- Validate the received ID ---	// --- Validate the received ID ---
 if (empty($mediaId) || !is_numeric($mediaId)) {
     // If the ID is missing or invalid, send an error response
-    echo json_encode(['success' => false, 'message' => 'Invalid or missing Media ID.']);
+    echo json_encode(['success' => false, 'message' => 'Invalid or missing Media ID.' .$mediaId]);
     exit();
 }
+
 
 // --- Prepare the SQL DELETE statement to prevent SQL injection ---
 $sql = "DELETE FROM media WHERE id = ?";

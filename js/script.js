@@ -5,7 +5,37 @@
  * @param {string} message The message to display.
  * @param {number} [duration=3000] How long the message stays visible in milliseconds.
  */
+function showCustomConfirm(message) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirm-modal');
+        const messageEl = document.getElementById('confirm-message');
+        const yesBtn = document.getElementById('confirm-yes-btn');
+        const noBtn = document.getElementById('confirm-no-btn');
 
+        messageEl.textContent = message;
+        modal.classList.add('active');
+
+        function handleYes() {
+            modal.classList.remove('active');
+            cleanup();
+            resolve(true);
+        }
+
+        function handleNo() {
+            modal.classList.remove('active');
+            cleanup();
+            resolve(false);
+        }
+
+        function cleanup() {
+            yesBtn.removeEventListener('click', handleYes);
+            noBtn.removeEventListener('click', handleNo);
+        }
+
+        yesBtn.addEventListener('click', handleYes);
+        noBtn.addEventListener('click', handleNo);
+    });
+}
 
 function showCustomAlert(message, duration = 3000) {
     const alertBox = document.getElementById('custom-alert');
@@ -45,13 +75,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupEventListeners() {
     
+// In js/script.js, inside the setupEventListeners function
+
+// ... your other event listeners ...
+
 document.getElementById('wishlist-page')?.addEventListener('click', e => {
     const removeButton = e.target.closest('.remove-wishlist-btn');
+    const playButton = e.target.closest('.play-btn');
+
     if (removeButton) {
-        handleRemoveFromWishlist(removeButton.dataset.mediaId);
+        // This handles the "Remove" button
+        const mediaId = removeButton.dataset.mediaId;
+        handleRemoveFromWishlist(mediaId);
+    } 
+    else if (playButton) {
+        // This handles the "Play Now" button
+        const mediaId = playButton.dataset.mediaId;
+        const title = playButton.dataset.title;
+        
+        showCustomAlert(`Now playing: ${title}`);
+        logToWatchHistory(mediaId); // Also log it to the user's watch history
     }
-  
 });
+
+// ... other event listeners ...
  
     document.querySelector('nav')?.addEventListener('click', e => {
         const action = e.target.closest('[data-action]')?.dataset.action;
@@ -126,8 +173,7 @@ function updateHeaderUI() {
         } else {
             // CHANGED: This now opens the dashboard in the same page
             userButtons = `
-                <a href="#" class="btn" onclick="renderUserDashboard()">My Dashboard</a>
-                <a href="#" class="btn" onclick="renderWishlistPage()">My Wishlist</a>
+                <a href="#" class="btn-wishlist" onclick="renderWishlistPage()">My Wishlist</a>
             `;
         }
 
@@ -448,12 +494,17 @@ async function renderHomepageWishlist() {
     }
 }
 
+// In js/script.js, REPLACE your old renderWishlistPage function
+
 async function renderWishlistPage() {
     showPage('wishlist');
     const wishlistGrid = document.getElementById('wishlist-grid');
     const emptyMessage = document.getElementById('wishlist-empty');
+    
+    // Reset the view
     wishlistGrid.innerHTML = '<p class="text-gray-400">Loading your wishlist...</p>';
     emptyMessage.classList.add('hidden');
+    wishlistGrid.classList.remove('hidden');
 
     const response = await fetch('api/get_wishlist.php');
     const result = await response.json();
@@ -461,27 +512,27 @@ async function renderWishlistPage() {
     if (result.success && result.wishlist.length > 0) {
         wishlistGrid.innerHTML = ''; // Clear loading message
         result.wishlist.forEach(movie => {
-            wishlistGrid.innerHTML += `
-                <div class="wishlist-item" id="wishlist-item-${movie.id}">
-                    <div class="wishlist-item-poster">
-                        <img src="${movie.poster}" alt="${movie.title}">
-                    </div>
-                    <div class="wishlist-item-details">
-                        <h3 class="text-2xl font-bold">${movie.title} (${movie.year})</h3>
-                        <p class="description mt-2">${movie.description}</p>
-                        <div class="wishlist-item-actions">
-                            <button class="btn play-btn" data-media-id="${movie.id}" data-title="${movie.title}">Play Now</button>
-                            <button class="btn btn-secondary remove-wishlist-btn" data-media-id="${movie.id}">Remove</button>
-                        </div>
-                    </div>
+            // Re-using the standard movie-card for a consistent look
+            const movieCard = document.createElement('div');
+            movieCard.className = 'movie-card';
+            movieCard.id = `wishlist-item-${movie.id}`; // Add ID for removal
+            
+            movieCard.innerHTML = `
+                <img src="${movie.poster}" alt="${movie.title}">
+                <div class="action-overlay">
+                    <button class="btn play-btn" data-media-id="${movie.id}" data-title="${movie.title}">Play Now</button>
+                    <button class="btn btn-secondary remove-wishlist-btn" data-media-id="${movie.id}">Remove</button>
                 </div>
             `;
+            wishlistGrid.appendChild(movieCard);
         });
     } else if (result.success) {
-        wishlistGrid.innerHTML = '';
+        // If the wishlist is empty, hide the grid and show the message
+        wishlistGrid.classList.add('hidden');
         emptyMessage.classList.remove('hidden');
     } else {
         showCustomAlert(result.message);
+        wishlistGrid.classList.add('hidden');
         emptyMessage.classList.remove('hidden');
     }
 }
@@ -519,6 +570,8 @@ async function handleWishlistClick(mediaId, buttonElement) {
 
 
 
+// In js/script.js, REPLACE your old handleRemoveFromWishlist function
+
 async function handleRemoveFromWishlist(mediaId) {
     if (!state.currentUser) return;
 
@@ -531,13 +584,33 @@ async function handleRemoveFromWishlist(mediaId) {
     showCustomAlert(result.message);
 
     if (result.success) {
-        // Remove the item from the page without a full reload
+        // --- START: New Instant Update Logic ---
+
+        // 1. Remove the item from the current wishlist page view
         document.getElementById(`wishlist-item-${mediaId}`)?.remove();
         
-        // Check if the wishlist is now empty and show the message if it is
+        // 2. Update the master list of wishlisted IDs
+        const numericMediaId = parseInt(mediaId);
+        wishlistedMediaIds = wishlistedMediaIds.filter(id => id !== numericMediaId);
+
+        // 3. Re-render the wishlist category on the homepage so it disappears
+        renderHomepageWishlist();
+
+        // 4. Find the button on the homepage and reset it to "+ Wishlist"
+        const homepageCard = document.querySelector(`#movie-gallery-container .movie-card[data-media-id="${mediaId}"]`);
+        const wishlistButton = homepageCard?.querySelector('.wishlist-btn');
+        if (wishlistButton) {
+            wishlistButton.innerHTML = '<i class="fas fa-plus"></i> Wishlist';
+            wishlistButton.classList.remove('in-wishlist');
+            wishlistButton.disabled = false;
+        }
+
+        // 5. Check if the wishlist page is now empty
         if (document.querySelectorAll('.wishlist-item').length === 0) {
             document.getElementById('wishlist-empty').classList.remove('hidden');
         }
+        
+        // --- END: New Logic ---
     }
 }
 
@@ -651,11 +724,124 @@ async function renderAdminDashboard() {
     });
 }
 
-async function handleAddMedia(e) { /* ... form submission for adding media ... */ }
-async function handleEditMedia(e) { /* ... form submission for editing media ... */ }
-async function handleMediaTableClick(e) { /* ... logic for edit/delete media buttons ... */ }
-async function handleUsersTableClick(e) { /* ... logic for edit/delete user buttons ... */ }
-async function handleEditUser(e) { /* ... form submission for editing a user ... */ }
+    async function handleAddMedia(e) { 
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', document.getElementById('add-media-title').value);
+    formData.append('year', document.getElementById('add-media-year').value);
+    formData.append('rating', document.getElementById('add-media-rating').value);
+    formData.append('poster', document.getElementById('add-media-poster').value);
+    formData.append('description', document.getElementById('add-media-desc').value);
+    formData.append('exclusive', document.getElementById('add-media-exclusive').checked ? 1 : 0);
+    formData.append('type', document.getElementById('add-media-type').checked ? 'web-series' : 'movie');
+
+    const response = await fetch('api/add_media.php', { method: 'POST', body: formData });
+    const result = await response.json();
+    showCustomAlert(result.message);
+    if (result.success) {
+        document.getElementById('add-media-form').reset();
+        renderAdminDashboard();
+    }
+} /* ... form submission for adding media ... */ 
+async function handleEditMedia(e) { 
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('id', document.getElementById('edit-media-id').value);
+    formData.append('title', document.getElementById('edit-media-title').value);
+    formData.append('year', document.getElementById('edit-media-year').value);
+    formData.append('rating', document.getElementById('edit-media-rating').value);
+    formData.append('poster', document.getElementById('edit-media-poster').value);
+    formData.append('description', document.getElementById('edit-media-desc').value);
+    formData.append('exclusive', document.getElementById('edit-media-exclusive').checked ? 1 : 0);
+    formData.append('type', document.getElementById('edit-media-type').checked ? 'web-series' : 'movie');
+
+    const response = await fetch('api/update_media.php', { method: 'POST', body: formData });
+    const result = await response.json();
+    showCustomAlert(result.message);
+    if (result.success) {
+        document.getElementById('edit-media-modal').classList.remove('active');
+        renderAdminDashboard();
+    }
+}
+async function handleMediaTableClick(e) { 
+    const editBtn = e.target.closest('.edit-btn');
+    const deleteBtn = e.target.closest('.delete-btn');
+
+    if (editBtn) {
+        const mediaId = editBtn.dataset.id;
+        // Populate edit form with existing data
+        const media = movies.find(m => m.id == mediaId);
+        if (media) {
+            document.getElementById('edit-media-id').value = media.id;
+            document.getElementById('edit-media-title').value = media.title;
+            document.getElementById('edit-media-year').value = media.year;
+            document.getElementById('edit-media-rating').value = media.rating;
+            document.getElementById('edit-media-poster').value = media.poster;
+            document.getElementById('edit-media-desc').value = media.description;
+            document.getElementById('edit-media-exclusive').checked = media.exclusive == 1;
+            document.getElementById('edit-media-type').checked = media.type === 'web-series';
+            document.getElementById('edit-media-modal').classList.add('active');
+        }
+    }
+
+    if (deleteBtn) {
+        const mediaId = deleteBtn.dataset.id;
+        const confirmed = await showCustomConfirm('Are you sure you want to delete this media?');
+        if (confirmed) {
+            console.log(mediaId);
+            const response = await fetch('api/delete_media.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: mediaId })
+            });
+            const result = await response.json();
+            showCustomAlert(result.message);
+            if (result.success) renderAdminDashboard();
+        }
+    }
+} /* ... logic for edit/delete media buttons ... */ 
+async function handleUsersTableClick(e) { 
+    const editBtn = e.target.closest('.user-edit-btn');
+    const deleteBtn = e.target.closest('.user-delete-btn');
+
+    if (editBtn) {
+        document.getElementById('edit-user-id').value = editBtn.dataset.id;
+        document.getElementById('edit-user-username').value = editBtn.dataset.username;
+        document.getElementById('edit-user-subscription').value = editBtn.dataset.subscription;
+        document.getElementById('edit-user-role').value = editBtn.dataset.role;
+        document.getElementById('edit-user-modal').classList.add('active');
+    }
+
+    if (deleteBtn) {
+        const userId = deleteBtn.dataset.id;
+        const confirmed = await showCustomConfirm('Are you sure you want to delete this user?');
+        if (confirmed) {
+            const response = await fetch('api/delete_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: userId })
+            });
+            const result = await response.json();
+            showCustomAlert(result.message);
+            if (result.success) renderAdminDashboard();
+        }
+    }
+}/* ... logic for edit/delete user buttons ... */ 
+async function handleEditUser(e) { 
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('id', document.getElementById('edit-user-id').value);
+    formData.append('subscription', document.getElementById('edit-user-subscription').value);
+    formData.append('role', document.getElementById('edit-user-role').value);
+
+    const response = await fetch('api/update_user.php', { method: 'POST', body: formData });
+    const result = await response.json();
+    showCustomAlert(result.message);
+    if (result.success) {
+        document.getElementById('edit-user-modal').classList.remove('active');
+        renderAdminDashboard();
+    }
+}
 
 
 // --- HELPER & AI FUNCTIONS ---

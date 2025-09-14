@@ -1,5 +1,6 @@
+
 <?php
-// api/delete_media.php
+// api/get_dashboard_data.php
 
 // Set the response header to JSON
 header('Content-Type: application/json');
@@ -8,52 +9,45 @@ header('Content-Type: application/json');
 require_once '../db_connect.php';
 
 // --- Security Check: Ensure the user is an authenticated admin ---
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'super_admin') {
-    // If not an admin, send an unauthorized error and stop the script
-    echo json_encode(['success' => false, 'message' => 'Unauthorized access. You do not have permission to perform this action.']);
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SESSION['user']['role'] !== 'super_admin')) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized access. Admin privileges required.']);
     exit();
 }
 
-// --- Get the Media ID from the POST request ---
-$mediaId = $_POST['id'] ?? 0;
+try {
+    $response = ['success' => true];
 
-// --- Validate the received ID ---
-if (empty($mediaId) || !is_numeric($mediaId)) {
-    // If the ID is missing or invalid, send an error response
-    echo json_encode(['success' => false, 'message' => 'Invalid or missing Media ID.']);
-    exit();
-}
+    // 1. Get total users count
+    $result = $conn->query("SELECT COUNT(*) as total FROM users");
+    $response['totalUsers'] = $result->fetch_assoc()['total'];
 
-// --- Prepare the SQL DELETE statement to prevent SQL injection ---
-$sql = "DELETE FROM media WHERE id = ?";
-$stmt = $conn->prepare($sql);
+    // 2. Get total subscriptions count (users with non-null subscription)
+    $result = $conn->query("SELECT COUNT(*) as total FROM users WHERE subscription IS NOT NULL AND subscription != 'None'");
+    $response['totalSubs'] = $result->fetch_assoc()['total'];
 
-if ($stmt === false) {
-    // Handle potential errors during statement preparation
-    echo json_encode(['success' => false, 'message' => 'Database prepare failed: ' . $conn->error]);
-    exit();
-}
-
-// Bind the integer ID parameter
-$stmt->bind_param("i", $mediaId);
-
-// --- Execute the statement and respond accordingly ---
-if ($stmt->execute()) {
-    // Check if any row was actually deleted
-    if ($stmt->affected_rows > 0) {
-        // Deletion was successful
-        echo json_encode(['success' => true, 'message' => 'Media item deleted successfully.']);
-    } else {
-        // No rows were affected, meaning the ID was not found
-        echo json_encode(['success' => false, 'message' => 'Media item not found or already deleted.']);
+    // 3. Get all users data
+    $result = $conn->query("SELECT id, username, email, subscription, role FROM users ORDER BY id");
+    $users = [];
+    while ($row = $result->fetch_assoc()) {
+        $users[] = $row;
     }
-} else {
-    // The execute call failed for some reason
-    echo json_encode(['success' => false, 'message' => 'Failed to delete media item: ' . $stmt->error]);
+    $response['users'] = $users;
+
+    // 4. Get all media data
+    $result = $conn->query("SELECT id, title, year, rating, poster, description, exclusive, type FROM media ORDER BY id DESC");
+    $media = [];
+    while ($row = $result->fetch_assoc()) {
+        $media[] = $row;
+    }
+    $response['media'] = $media;
+
+    echo json_encode($response);
+
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
 
-// --- Clean up and close connections ---
-$stmt->close();
+// --- Clean up and close connection ---
 $conn->close();
 
 ?>

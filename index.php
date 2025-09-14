@@ -133,7 +133,8 @@
         </main>
     </div>
     <div id="wishlist-page" class="page">
-        <i class="fas fa-arrow-left back-arrow" onclick="showPage('home')"></i>
+    <i class="fas fa-arrow-left back-arrow" onclick="showPage('home')"></i>
+
     <div class="wishlist-header">
         <div class="wishlist-header-overlay">
             <h1 class="text-5xl font-bold uppercase tracking-wider">My Wishlist</h1>
@@ -141,13 +142,13 @@
     </div>
 
     <main class="wishlist-container">
-        <div id="wishlist-grid" class="grid grid-cols-1 gap-6">
+        <div id="wishlist-grid" class="movie-grid">
             </div>
 
         <div id="wishlist-empty" class="hidden text-center py-16">
             <i class="fas fa-film text-6xl text-gray-600 mb-4"></i>
             <h2 class="text-3xl font-bold">Your Wishlist is Empty</h2>
-            <p class="text-gray-400 mt-2">Add movies and series you want to watch later by clicking the 'Wishlist' button on any title.</p>
+            <p class="text-gray-400 mt-2">Add movies and series you want to watch by clicking the 'Wishlist' button on any title.</p>
         </div>
     </main>
 </div>
@@ -213,6 +214,10 @@
             <i class="fas fa-arrow-left back-arrow" onclick="showPage('home')"></i>
             <form id="admin-login-form" class="auth-form" novalidate autocomplete="off">
                 <h2 class="text-2xl font-bold text-center mb-6">Admin Login</h2>
+                <p class="admin-login-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                This is a restricted area, only for authorized persons!.
+                </p>
                 <div class="input-group">
                     <i class="fas fa-user-shield"></i>
                     <input type="text" id="admin-username" name="username" placeholder="Admin Username" required autocomplete="new-password">
@@ -278,16 +283,16 @@
                 </div>
                 <h2 class="text-3xl font-bold w-full text-center mt-16 mb-4">Annual Plans (Save over 15%)</h2>
 
-<div class="plan-card" data-plan="Basic Annual" data-price="99.99">
-    <h3 class="text-2xl font-bold">Basic Annual</h3>
-    <p class="text-4xl font-bold my-4">$99.99<span class="text-lg font-normal text-gray-400">/year</span></p>
-    <ul class="text-left space-y-3 flex-grow">
-        <li><i class="fas fa-check text-green-500 mr-2"></i>Good video quality (720p)</li>
-        <li><i class="fas fa-check text-green-500 mr-2"></i>Watch on 1 device at a time</li>
-        <li><i class="fas fa-times text-red-500 mr-2"></i>No downloads</li>
-    </ul>
-    <button class="btn">Select Plan</button>
-</div>
+                <div class="plan-card" data-plan="Basic Annual" data-price="99.99">
+                    <h3 class="text-2xl font-bold">Basic Annual</h3>
+                    <p class="text-4xl font-bold my-4">$99.99<span class="text-lg font-normal text-gray-400">/year</span></p>
+                    <ul class="text-left space-y-3 flex-grow">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Good video quality (720p)</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Watch on 1 device at a time</li>
+                        <li><i class="fas fa-times text-red-500 mr-2"></i>No downloads</li>
+                    </ul>
+                <button class="btn">Select Plan</button>
+                </div>
 
 <div class="plan-card" data-plan="Standard Annual" data-price="159.99">
     <h3 class="text-2xl font-bold">Standard Annual</h3>

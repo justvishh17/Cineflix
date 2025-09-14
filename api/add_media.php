@@ -13,6 +13,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'super_admin') {
 }
 
 // --- Receive and Sanitize POST Data ---
+
 $title = $_POST['title'] ?? '';
 $year = $_POST['year'] ?? 0;
 $rating = $_POST['rating'] ?? 0.0;
@@ -22,7 +23,9 @@ $exclusive = isset($_POST['exclusive']) && $_POST['exclusive'] === 'true' ? 1 : 
 $type = $_POST['type'] ?? 'movie';
 
 
+
 // --- Server-Side Validation ---
+
 if (empty($title) || empty($year) || empty($poster) || empty($description)) {
     echo json_encode(['success' => false, 'message' => 'All fields are required.']);
     exit();

@@ -5,12 +5,14 @@ header('Content-Type: application/json');
 require_once '../db_connect.php';
 
 // Security: Only admins can perform this action
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SESSION['user']['role'] !== 'super_admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
     exit();
 }
 
-$userIdToDelete = $_POST['id'] ?? 0;
+// --- Get the User ID from the POST request (JSON format) ---
+$data = json_decode(file_get_contents('php://input'), true);
+$userIdToDelete = $data['id'] ?? 0;
 $adminUserId = $_SESSION['user']['id'];
 
 // Security: Prevent an admin from deleting their own account

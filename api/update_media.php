@@ -8,13 +8,14 @@ header('Content-Type: application/json');
 require_once '../db_connect.php';
 
 // --- Security Check: Ensure the user is an authenticated admin ---
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SESSION['user']['role'] !== 'super_admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
     exit();
 }
 
+
 // --- Receive and Sanitize POST Data ---
-$id = $_POST['id'] ?? 0;
+$mediaId = $_POST['id'] ?? null;
 $title = $_POST['title'] ?? '';
 $year = $_POST['year'] ?? 0;
 $rating = $_POST['rating'] ?? 0.0;
@@ -25,8 +26,9 @@ $exclusive = (isset($_POST['exclusive']) && $_POST['exclusive'] === 'true') ? 1 
 $type = $_POST['type'] ?? 'movie';
 
 // --- Server-Side Validation ---
-if (empty($id) || !is_numeric($id)) {
-    echo json_encode(['success' => false, 'message' => 'A valid Media ID is required.']);
+$mediaId = $_POST['id'] ?? null;
+if (!$mediaId) {
+    echo json_encode(['success' => false, 'message' => 'Invalid or missing Media ID.']);
     exit();
 }
 if (empty($title) || empty($year) || empty($poster) || empty($description)) {
