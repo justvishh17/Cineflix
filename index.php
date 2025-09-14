@@ -106,6 +106,11 @@
     </div>
 
     <div class="movie-category">
+        <h2 class="text-2xl font-bold mb-4">comedy movies😁</h2>
+        <div id="comedy-grid" class="movie-grid"></div>
+    </div>
+
+    <div class="movie-category">
         <h2 class="text-2xl font-bold mb-4">Hollywood✨</h2>
         <div id="movie-grid" class="movie-grid"></div>
     </div>
@@ -371,6 +376,7 @@
 
     <div id="admin-dashboard-page" class="page">
         <header class="admin-header">
+            <i class="fas fa-arrow-left back-arrow" onclick="showPage('home')"></i>
             <h1 class="text-2xl font-bold">Admin Dashboard</h1>
             <button class="btn btn-secondary" data-action="logout">Logout</button>
         </header>
@@ -534,6 +540,19 @@
         </div>
     </div>
 </div>
+<div id="trailer-modal" class="popup">
+        <div class="trailer-popup-content">
+            <span class="close-popup" onclick="closeTrailerPopup()">&times;</span>
+            <div class="trailer-header">
+                <h2 id="trailer-title" class="text-2xl font-bold mb-2">Movie Title</h2>
+                <p id="trailer-year" class="text-gray-400 mb-4">Year</p>
+            </div>
+            <div class="trailer-container">
+                <iframe id="trailer-iframe" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
     
     <script src="js/script.js"></script>
     <div id="custom-alert" class="custom-alert"><p id="custom-alert-message"></p></div>

@@ -74,6 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function setupEventListeners() {
+
+    document.getElementById('trailer-modal')?.addEventListener('click', e => {
+        // Close modal when clicking outside the content
+        if (e.target.id === 'trailer-modal') {
+            closeTrailerPopup();
+        }
+    });
+
+    // Close trailer modal with Escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('trailer-modal').classList.contains('active')) {
+            closeTrailerPopup();
+        }
+    });
     
 // In js/script.js, inside the setupEventListeners function
 
@@ -89,6 +103,7 @@ document.getElementById('wishlist-page')?.addEventListener('click', e => {
         handleRemoveFromWishlist(mediaId);
     } 
     else if (playButton) {
+        
         // This handles the "Play Now" button
         const mediaId = playButton.dataset.mediaId;
         const title = playButton.dataset.title;
@@ -214,6 +229,7 @@ function renderMovies() {
     populateGrid(document.getElementById('all-movies-grid'), [...movies].sort((a, b) => a.title.localeCompare(b.title)));
     populateGrid(document.getElementById('anime-grid'), [...movies].sort((a) => a.type === 'anime' ? -1 : 1).filter(m => m.type === 'anime'));
     populateGrid(document.getElementById('bollywood-grid'), [...movies].sort((a) => a.type === 'bollywood' ? -1 : 1).filter(m => m.type === 'bollywood'));
+    populateGrid(document.getElementById('comedy-grid'), [...movies].sort((a) => a.type === 'comedy' ? -1 : 1).filter(m => m.type === 'comedy'));
 
 }
 // In js/script.js, inside the renderMovies function,
@@ -479,6 +495,7 @@ function handleMovieGalleryClick(e) {
         return;
     }
     showCustomAlert(`Now playing: ${movie.title}`);
+    openTrailerPopup(movie);
     logToWatchHistory(mediaId);
 }
 
@@ -643,11 +660,23 @@ async function renderUserDashboard() {
 }
 
 async function handleCancelSubscription() {
-    if (confirm('Are you sure you want to cancel your subscription?')) {
+    const userConfirmed = await showCustomConfirm('Are you sure you want to cancel your subscription? This action cannot be undone.');
+    if (userConfirmed) {
         const response = await fetch('api/cancel_subscription.php', { method: 'POST' });
         const result = await response.json();
+        
         showCustomAlert(result.message);
         if (result.success) renderUserDashboard();
+        // After a short delay, close the popup and redirect to the home page
+            setTimeout(() => {
+                successPopup.classList.remove('active');
+                // If the app uses an SPA navigation helper, use it; otherwise fall back to window.location
+                if (typeof showPage === 'function') {
+                    showPage('home');
+                } else {
+                    window.location.href = 'index.php';
+                }
+            }, 1800);
     }
 }
 
@@ -1013,5 +1042,43 @@ async function handleGenerateDescription(formPrefix) {
     
     button.innerHTML = '✨ Generate Description';
     button.disabled = false;
+}
+
+
+function openTrailerPopup(movie) {
+    const modal = document.getElementById('trailer-modal');
+    const title = document.getElementById('trailer-title');
+    const year = document.getElementById('trailer-year');
+    const iframe = document.getElementById('trailer-iframe');
+
+    // Set movie details
+    title.textContent = movie.title;
+    year.textContent = movie.year;
+
+    // Generate YouTube embed URL
+    // For now, we'll use a placeholder trailer ID if movie doesn't have trailer_url
+    const trailerId = movie.trailer_url || 'dQw4w9WgXcQ'; // Rick Roll as fallback
+    const embedUrl = `https://www.youtube.com/embed/${trailerId}?autoplay=1&rel=0&modestbranding=1`;
+
+    iframe.src = embedUrl;
+    modal.classList.add('active');
+
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Closes the trailer popup and stops video
+ */
+function closeTrailerPopup() {
+    const modal = document.getElementById('trailer-modal');
+    const iframe = document.getElementById('trailer-iframe');
+
+    // Stop video by clearing src
+    iframe.src = '';
+    modal.classList.remove('active');
+
+    // Re-enable body scroll
+    document.body.style.overflow = '';
 }
 
