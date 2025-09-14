@@ -753,7 +753,7 @@ async function renderAdminDashboard() {
     });
 }
 
-    async function handleAddMedia(e) { 
+async function handleAddMedia(e) { 
     e.preventDefault();
     const formData = new FormData();
     formData.append('title', document.getElementById('add-media-title').value);
@@ -761,6 +761,7 @@ async function renderAdminDashboard() {
     formData.append('rating', document.getElementById('add-media-rating').value);
     formData.append('poster', document.getElementById('add-media-poster').value);
     formData.append('description', document.getElementById('add-media-desc').value);
+    formData.append('trailer_url', document.getElementById('add-media-trailer').value);
     formData.append('exclusive', document.getElementById('add-media-exclusive').checked ? 1 : 0);
     formData.append('type', document.getElementById('add-media-type').checked ? 'web-series' : 'movie');
 
@@ -781,6 +782,7 @@ async function handleEditMedia(e) {
     formData.append('rating', document.getElementById('edit-media-rating').value);
     formData.append('poster', document.getElementById('edit-media-poster').value);
     formData.append('description', document.getElementById('edit-media-desc').value);
+    formData.append('trailer_url', document.getElementById('edit-media-trailer').value);
     formData.append('exclusive', document.getElementById('edit-media-exclusive').checked ? 1 : 0);
     formData.append('type', document.getElementById('edit-media-type').checked ? 'web-series' : 'movie');
 
@@ -807,6 +809,7 @@ async function handleMediaTableClick(e) {
             document.getElementById('edit-media-rating').value = media.rating;
             document.getElementById('edit-media-poster').value = media.poster;
             document.getElementById('edit-media-desc').value = media.description;
+            document.getElementById('edit-media-trailer').value = media.trailer_url;
             document.getElementById('edit-media-exclusive').checked = media.exclusive == 1;
             document.getElementById('edit-media-type').checked = media.type === 'web-series';
             document.getElementById('edit-media-modal').classList.add('active');

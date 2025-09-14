@@ -19,6 +19,7 @@ $year = $_POST['year'] ?? 0;
 $rating = $_POST['rating'] ?? 0.0;
 $poster = $_POST['poster'] ?? '';
 $description = $_POST['description'] ?? '';
+$trailer_url = $_POST['trailer_url'] ?? '';
 $exclusive = isset($_POST['exclusive']) && $_POST['exclusive'] === 'true' ? 1 : 0;
 $type = $_POST['type'] ?? 'movie';
 
@@ -37,8 +38,8 @@ if (!is_numeric($year) || !is_numeric($rating)) {
 }
 
 // --- Prepare and Execute SQL Statement ---
-$sql = "INSERT INTO media (title, year, rating, poster, description, exclusive, type) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO media (title, year, rating, poster, description, trailer_url, exclusive, type) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
@@ -47,7 +48,7 @@ if ($stmt === false) {
 }
 
 // Bind parameters (s = string, i = integer, d = double)
-$stmt->bind_param("sidssis", $title, $year, $rating, $poster, $description, $exclusive, $type);
+$stmt->bind_param("sidssiss", $title, $year, $rating, $poster, $description, $trailer_url, $exclusive, $type);
 
 // --- Return JSON Response ---
 if ($stmt->execute()) {

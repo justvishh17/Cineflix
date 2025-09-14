@@ -15,12 +15,13 @@ if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SES
 
 
 // --- Receive and Sanitize POST Data ---
-$mediaId = $_POST['id'] ?? null;
+
 $title = $_POST['title'] ?? '';
 $year = $_POST['year'] ?? 0;
 $rating = $_POST['rating'] ?? 0.0;
 $poster = $_POST['poster'] ?? '';
 $description = $_POST['description'] ?? '';
+$trailer_url = $_POST['trailer_url'] ?? '';
 // Convert checkbox 'true'/'false' string from JS FormData to 1/0 for DB
 $exclusive = (isset($_POST['exclusive']) && $_POST['exclusive'] === 'true') ? 1 : 0;
 $type = $_POST['type'] ?? 'movie';
@@ -41,7 +42,7 @@ if (!is_numeric($year) || !is_numeric($rating)) {
 }
 
 // --- Prepare the SQL UPDATE statement ---
-$sql = "UPDATE media SET title = ?, year = ?, rating = ?, poster = ?, description = ?, exclusive = ?, type = ? WHERE id = ?";
+$sql = "UPDATE media SET title = ?, year = ?, rating = ?, poster = ?, description = ?, trailer_url = ?, exclusive = ?, type = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
@@ -50,7 +51,7 @@ if ($stmt === false) {
 }
 
 // Bind parameters (s = string, i = integer, d = double)
-$stmt->bind_param("sidssisi", $title, $year, $rating, $poster, $description, $exclusive, $type, $id);
+$stmt->bind_param("sidssisi", $title, $year, $rating, $poster, $description, $trailer_url, $exclusive, $type,);
 
 // --- Execute the statement and respond ---
 if ($stmt->execute()) {

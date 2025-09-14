@@ -435,6 +435,7 @@
                      <input type="text" id="add-media-rating" class="w-full p-2 mb-4 bg-gray-800 rounded" placeholder="Rating" required>
                      <input type="text" id="add-media-poster" class="w-full p-2 mb-4 bg-gray-800 rounded" placeholder="Poster Image URL" required>
                      <textarea id="add-media-desc" class="w-full p-2 mb-4 bg-gray-800 rounded" placeholder="Description" required></textarea>
+                     <input type="text" id="add-media-trailer" class="w-full p-2 mb-4 bg-gray-800 rounded" placeholder="Trailer URL">
                      <button type="button" id="add-generate-desc-btn" class="btn ai-button w-full mb-4">✨ Generate Description</button>
                      <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="add-media-exclusive"> Is Exclusive?</label>
                       <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="add-media-type"> Is Web Series?</label>
@@ -515,6 +516,7 @@
                 <label>Rating</label><input type="text" id="edit-media-rating" class="w-full p-2 mb-4 bg-gray-800 rounded" required>
                 <label>Poster URL</label><input type="text" id="edit-media-poster" class="w-full p-2 mb-4 bg-gray-800 rounded" required>
                 <label>Description</label><textarea id="edit-media-desc" class="w-full p-2 mb-4 bg-gray-800 rounded" required></textarea>
+                <label>Trailer URL</label><input type="text" id="edit-media-trailer" class="w-full p-2 mb-4 bg-gray-800 rounded">
                 <button type="button" id="edit-generate-desc-btn" class="btn ai-button w-full mb-4">✨ Generate Description</button>
                 <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="edit-media-exclusive"> Is Exclusive?</label>
                 <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="edit-media-type"> Is Web Series?</label>
