@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CineFlix</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/cinema2.jpg'); /* Using your background image */
+            background-size: cover;
+            background-position: center;
+             /* This creates the blurry effect */
+            transform: scale(1.1); /* Prevents hard edges from the blur */
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* This moves the text to the bottom */
+            padding-bottom: 5vh;   /* This adds some space from the bottom edge */
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            cursor: pointer;
+        }
+        .prompt-text {
+            align-items: last baseline;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size: 2rem;
+            font-weight: 400;
+            filter: blur(1.5px);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-container"></div>
+    <div class="content">
+        <h1 class="prompt-text">Click anywhere to enter</h1>
+    </div>
+
+    <script>
+        // This script listens for a single click anywhere on the page,
+        // then redirects to your loader.html animation page.
+        window.addEventListener('click', () => {
+            window.location.href = 'loader.html';
+        }, { once: true });
+    </script>
+
+</body>
+</html>

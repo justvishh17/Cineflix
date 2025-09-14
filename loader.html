@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CineFlix</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+    
+    
+        <style>
+    
+    body {
+       
+        background-image: url('images/poster6.jpg');
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        overflow: hidden;
+        height: 100vh;
+    }
+
+   
+    #enter-button {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: var(--primary-color);
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    #enter-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(229, 9, 20, 0.5);
+    }
+    .hidden {
+        opacity: 0 !important;
+        pointer-events: none;
+    }
+    #cineflix-logo text {
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.3), 0 0 10px rgba(255, 0, 0, 0.2);
+    }
+</style>
+</head>
+<body>
+
+    <div id="loader-wrapper">
+    <svg id="cineflix-logo" width="90%" height="230" viewBox="0 -50 800 230">
+        <text y="115" x="50%" text-anchor="middle">
+            <tspan class="cine-text">C</tspan>
+            <tspan class="cine-text">i</tspan>
+            <tspan class="cine-text">n</tspan>
+            <tspan class="cine-text">e</tspan>
+            <tspan class="flix-text">F</tspan>
+            <tspan class="flix-text">l</tspan>
+            <tspan class="flix-text">i</tspan>
+            <tspan class="flix-text">x</tspan>
+        </text>
+    </svg>
+    <audio id="intro-sound" preload="auto">
+        <source src="sounds/whoosh2.mp3" type="audio/mp3">
+    </audio>
+</div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const sound = document.getElementById('intro-sound');
+            const animationDuration = 1100; // 1.1 seconds
+
+            sound.play().catch(error => {
+                console.log("Browser prevented audio playback. This is normal.");
+            });
+            
+            setTimeout(() => {
+                window.location.href = 'index.php';
+            }, animationDuration);
+        });
+    </script>
+    
+</body>
+</html>

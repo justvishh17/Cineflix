@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing PayPal Payment</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-10 rounded-lg shadow-lg text-center max-w-md">
+        <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.png" alt="PayPal Logo" class="mx-auto mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Processing Your Payment...</h1>
+        <p class="text-gray-600 mb-6">Please wait while we confirm your transaction. You will be redirected back to CineFlix shortly.</p>
+        
+        <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600 mx-auto"></div>
+
+        <p class="text-sm text-gray-500 mt-6">
+            This is a simulation. You are being redirected automatically.
+        </p>
+    </div>
+
+    <script>
+        // Wait for 4 seconds to simulate processing
+        setTimeout(() => {
+            // Set a flag in the browser's session storage to tell the homepage to show the success message
+            sessionStorage.setItem('showSuccessPopup', 'true');
+            
+            // Redirect back to the homepage
+            window.location.href = 'index.php';
+        }, 4000); // 4 seconds
+    </script>
+    </body>
+</html>
