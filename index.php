@@ -159,7 +159,7 @@
                 <h2 class="text-2xl font-bold text-center mb-6">User Login</h2>
                 <div class="input-group">
                     <i class="fas fa-user"></i>
-                    <input type="text" id="login-username"  name="username" placeholder="Username" required autocomplete="new-password">
+                    <input type="text" id="login-username"  name="username" placeholder="Username or Email" required autocomplete="new-password">
                 </div>
                 <div class="error-message" id="login-username-error"></div>
                 <div class="input-group relative">

@@ -13,7 +13,7 @@ $password = $_POST['password'] ?? '';
 
 // --- Basic Validation ---
 if (empty($username)) {
-    echo json_encode(['success' => false, 'message' => 'Username is required.', 'field' => 'username']);
+    echo json_encode(['success' => false, 'message' => 'Username or email is required.', 'field' => 'username']);
     exit();
 }
 if (empty($password)) {
@@ -21,9 +21,9 @@ if (empty($password)) {
     exit();
 }
 
-// --- Prepare SQL statement to find the user by username ---
-// This prevents SQL injection attacks
-$sql = "SELECT id, username, password, role, subscription FROM users WHERE username = ?";
+// --- Prepare SQL statement to find the user by username OR email ---
+// This prevents SQL injection attacks and allows login with either username or email
+$sql = "SELECT id, username, email, password, role, subscription FROM users WHERE username = ? OR email = ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
@@ -31,8 +31,8 @@ if ($stmt === false) {
     exit();
 }
 
-// Bind the username parameter
-$stmt->bind_param("s", $username);
+// Bind the username parameter for both username and email fields
+$stmt->bind_param("ss", $username, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -53,15 +53,19 @@ if ($result->num_rows === 1) {
             'subscription' => $user['subscription']
         ];
 
-        // Send a success response back to the JavaScript
-        echo json_encode(['success' => true, 'message' => 'Login successful!']);
+        // Send a success response with user data back to the JavaScript
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Login successful!',
+            'user' => $_SESSION['user']
+        ]);
     } else {
         // The password was incorrect
         echo json_encode(['success' => false, 'message' => 'Incorrect password. Please try again.', 'field' => 'password']);
     }
 } else {
-    // No user was found with the provided username
-    echo json_encode(['success' => false, 'message' => 'No user found with that username.', 'field' => 'username']);
+    // No user was found with the provided username or email
+    echo json_encode(['success' => false, 'message' => 'No user found with that username or email.', 'field' => 'username']);
 }
 
 // --- Clean up ---

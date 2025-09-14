@@ -269,12 +269,33 @@ async function handleLogout() {
 async function handleLogin(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const response = await fetch('api/login.php', { method: 'POST', body: formData });
-    const result = await response.json();
-    if (result.success) {
-        window.location.reload();
-    } else {
-        showCustomAlert(result.message);
+    
+    try {
+        const response = await fetch('api/login.php', { method: 'POST', body: formData });
+        const result = await response.json();
+        
+        if (result.success) {
+            // Update the global state with user information from the login response
+            state.currentUser = result.user;
+            
+            // Show success message
+            showCustomAlert('Login successful! Welcome back, ' + result.user.username + '!');
+            
+            // Update the header UI to show logged-in state
+            updateHeaderUI();
+            
+            // Show the home page
+            showPage('home');
+            
+            // Refresh movie grids to show user-specific content
+            renderHomepageWishlist();
+            
+        } else {
+            showCustomAlert(result.message);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showCustomAlert('Login failed. Please try again.');
     }
 }
 
