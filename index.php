@@ -365,6 +365,7 @@
     </div>
 
     <div id="admin-dashboard-page" class="page">
+        <i class="fas fa-arrow-left back-arrow" onclick="showPage('home')"></i>
         <header class="admin-header">
             <h1 class="text-2xl font-bold">Admin Dashboard</h1>
             <button class="btn btn-secondary" data-action="logout">Logout</button>
@@ -525,7 +526,15 @@
     </div>
 </div>
     
-    <script src="js/script.js"></script>
+    <!-- Load JavaScript modules in dependency order -->
+    <script src="js/utilities.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/movie-manager.js"></script>
+    <script src="js/user-dashboard.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/main.js"></script>
+    
     <div id="custom-alert" class="custom-alert"><p id="custom-alert-message"></p></div>
 
 </body>
