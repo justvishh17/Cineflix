@@ -132,7 +132,7 @@ try {
             <strong>Test User:</strong> test@example.com / test123<br>
             <strong>Subscriber:</strong> sub@example.com / test123<br>
             <br>
-            <strong>Next:</strong> <a href='index.php'>Go to Cineflix</a> | 
+            <strong>Next:</strong> <a href='../index.php'>Go to Cineflix</a> | 
             <a href='check_setup.php'>Verify Setup</a>
           </div>";
 

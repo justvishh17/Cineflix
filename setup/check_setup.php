@@ -136,7 +136,7 @@ if ($checks['db_connection']) {
     ];
     
     foreach ($apiFiles as $file => $description) {
-        $filePath = __DIR__ . "/api/$file";
+        $filePath = __DIR__ . "/../api/$file";
         if (file_exists($filePath)) {
             echo "<div class='check-item pass'>✅ <strong>API: $file</strong> - $description</div>";
         } else {
@@ -205,7 +205,7 @@ if ($overallStatus) {
     echo "<h3 style='color: #155724; margin: 0;'>🎉 Setup Verification Passed!</h3>";
     echo "<p style='color: #155724; margin: 10px 0 0 0;'>Your Cineflix application is properly configured and ready to use.</p>";
     echo "<p style='margin: 15px 0 0 0;'>";
-    echo "<a href='index.php' style='background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;'>🚀 Launch Cineflix</a>";
+    echo "<a href='../index.php' style='background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;'>🚀 Launch Cineflix</a>";
     echo "<a href='init_db.php' style='background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>🔄 Re-initialize Database</a>";
     echo "</p>";
 } else {

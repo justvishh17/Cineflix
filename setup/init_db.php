@@ -337,7 +337,7 @@ try {
     
     echo "<div class='info'>
             <strong>Next Steps:</strong><br>
-            1. Navigate to <a href='index.php'>http://localhost/Cineflix/</a><br>
+            1. Navigate to <a href='../index.php'>http://localhost/Cineflix/</a><br>
             2. Login with admin@cineflix.com / admin123<br>
             3. Or create a new account via the signup page<br>
             4. Run <a href='check_setup.php'>check_setup.php</a> to verify everything is working

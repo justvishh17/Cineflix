@@ -130,19 +130,25 @@ A modern, full-featured streaming platform that brings the cinema experience to 
    - Apache
    - MySQL
 
-3. **Initialize the database**:
+3. **Check configuration** (optional but recommended):
+
+   ```
+   http://localhost/Cineflix/setup/config_check.php
+   ```
+
+4. **Initialize the database**:
 
    ```
    http://localhost/Cineflix/setup/init_db.php
    ```
 
-4. **Verify setup**:
+5. **Verify setup**:
 
    ```
    http://localhost/Cineflix/setup/check_setup.php
    ```
 
-5. **Launch the application**:
+6. **Launch the application**:
 
    ```
    http://localhost/Cineflix/
@@ -221,6 +227,16 @@ The application uses a well-structured MySQL database with the following key tab
 - [ ] Advanced analytics dashboard
 - [ ] Content rating system expansion
 - [ ] API rate limiting and caching
+
+## 📁 Project Structure
+
+For detailed information about the project organization and file structure, see [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md). The project follows a well-organized structure with:
+
+- `/api/` - REST API endpoints
+- `/config/` - Configuration files  
+- `/setup/` - Installation and setup scripts
+- `/css/`, `/js/`, `/images/` - Frontend assets
+- `/pages/` - Additional HTML pages
 
 ## 🤝 Contributing
 

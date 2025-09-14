@@ -225,7 +225,7 @@ if ($allGood) {
     echo "<div style='margin-top: 15px;'>";
     echo "<a href='init_db.php' style='background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;'>🚀 Initialize Database</a>";
     echo "<a href='check_setup.php' style='background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;'>🔍 Check Setup</a>";
-    echo "<a href='index.php' style='background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>📱 Launch App</a>";
+    echo "<a href='../index.php' style='background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>📱 Launch App</a>";
     echo "</div>";
 } else {
     echo "<h3 style='color: #721c24; margin: 0;'>⚠️ Configuration Issues Found</h3>";
