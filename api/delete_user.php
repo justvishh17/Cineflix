@@ -10,7 +10,9 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {
     exit();
 }
 
-$userIdToDelete = $_POST['id'] ?? 0;
+// --- Get the User ID from the POST request (JSON format) ---
+$data = json_decode(file_get_contents('php://input'), true);
+$userIdToDelete = $data['id'] ?? 0;
 $adminUserId = $_SESSION['user']['id'];
 
 // Security: Prevent an admin from deleting their own account

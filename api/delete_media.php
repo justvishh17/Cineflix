@@ -13,8 +13,9 @@ if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SES
     exit();
 }
 
-// --- Get the Media ID from the POST request ---
-$mediaId = $_POST['id'] ?? 0;
+// --- Get the Media ID from the POST request (JSON format) ---
+$data = json_decode(file_get_contents('php://input'), true);
+$mediaId = $data['id'] ?? 0;
 
 // --- Validate the received ID ---
 if (empty($mediaId) || !is_numeric($mediaId)) {
