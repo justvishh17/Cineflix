@@ -1,25 +1,30 @@
 # Trailer Popup Feature Implementation
 
 ## Overview
+
 I've successfully implemented a movie trailer popup feature that opens when users click on movie tiles. When a movie card is clicked, it now opens a responsive popup modal with a YouTube trailer.
 
 ## What Was Added
 
 ### 1. Database Schema Update
+
 - Added `trailer_url` column to the `media` table to store YouTube video IDs
 - SQL script: `sql/add_trailer_column.sql`
 
 ### 2. HTML Structure
+
 - Added a new modal popup `#trailer-modal` to `index.php`
 - Includes movie title, year, and YouTube iframe
 
 ### 3. CSS Styling
+
 - Professional responsive modal design
 - 16:9 aspect ratio video container
 - Mobile-friendly responsive design
 - Smooth animations and hover effects
 
 ### 4. JavaScript Functionality
+
 - `openTrailerPopup(movie)` - Opens popup with movie trailer
 - `closeTrailerPopup()` - Closes popup and stops video
 - Updated `handleMovieGalleryClick()` to open trailer instead of alert
@@ -40,13 +45,14 @@ I've successfully implemented a movie trailer popup feature that opens when user
    - Clicking outside the modal
 
 ## Sample Trailer URLs Added
+
 - Inception: `YoHD9XEInc0`
-- The Dark Knight: `EXeTwQWrcwY` 
+- The Dark Knight: `EXeTwQWrcwY`
 - Interstellar: `zSWdZVtXT7E`
 
 ## Setup Instructions
 
-### To add the trailer_url column to your database:
+### To add the trailer_url column to your database
 
 ```sql
 -- Run this SQL command in your database
@@ -58,7 +64,8 @@ UPDATE `media` SET `trailer_url` = 'EXeTwQWrcwY' WHERE `title` = 'The Dark Knigh
 UPDATE `media` SET `trailer_url` = 'zSWdZVtXT7E' WHERE `title` = 'Interstellar';
 ```
 
-### Or use the provided SQL script:
+### Or use the provided SQL script
+
 ```bash
 # Using XAMPP MySQL
 C:\xampp\mysql\bin\mysql.exe -u root -h localhost cineflix < sql/add_trailer_column.sql
