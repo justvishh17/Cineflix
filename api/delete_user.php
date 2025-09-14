@@ -2,7 +2,7 @@
 // api/delete_user.php
 
 header('Content-Type: application/json');
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // Security: Only admins can perform this action
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {

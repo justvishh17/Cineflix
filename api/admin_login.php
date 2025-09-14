@@ -1,7 +1,7 @@
 <?php
 // api/admin_login.php
 header('Content-Type: application/json');
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';

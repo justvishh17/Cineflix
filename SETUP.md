@@ -15,7 +15,7 @@ Welcome to Cineflix! This guide will help you set up the database and get your a
 Open your browser and go to:
 
 ```
-http://localhost/Cineflix/config_check.php
+http://localhost/Cineflix/setup/config_check.php
 ```
 
 This will verify that XAMPP is properly configured.
@@ -25,7 +25,7 @@ This will verify that XAMPP is properly configured.
 Open your browser and go to:
 
 ```
-http://localhost/Cineflix/init_db.php
+http://localhost/Cineflix/setup/init_db.php
 ```
 
 This will create the database and all required tables automatically.
@@ -35,7 +35,7 @@ This will create the database and all required tables automatically.
 Open your browser and go to:
 
 ```
-http://localhost/Cineflix/check_setup.php
+http://localhost/Cineflix/setup/check_setup.php
 ```
 
 This will confirm everything is working correctly.
@@ -52,10 +52,10 @@ http://localhost/Cineflix/
 
 | Script | Purpose | When to Use |
 |--------|---------|-------------|
-| `config_check.php` | Validates XAMPP configuration | First time setup or troubleshooting |
-| `init_db.php` | Creates database and tables | Initial setup or reset database |
-| `check_setup.php` | Verifies database setup | After initialization |
-| `seed_data.php` | Adds additional sample data | Optional - for more content |
+| `setup/config_check.php` | Validates XAMPP configuration | First time setup or troubleshooting |
+| `setup/init_db.php` | Creates database and tables | Initial setup or reset database |
+| `setup/check_setup.php` | Verifies database setup | After initialization |
+| `setup/seed_data.php` | Adds additional sample data | Optional - for more content |
 
 ## 👤 Default Accounts
 
@@ -87,7 +87,7 @@ The setup creates the following tables:
 Fatal error: Unknown database 'cineflix'
 ```
 
-**Solution:** Run `init_db.php` to create the database.
+**Solution:** Run `setup/init_db.php` to create the database.
 
 ### XAMPP Not Running
 
@@ -107,15 +107,15 @@ Fatal error: Unknown database 'cineflix'
 
 ### Missing Tables
 
-**Solution:** Run `init_db.php` again to recreate all tables.
+**Solution:** Run `setup/init_db.php` again to recreate all tables.
 
 ## 🔄 Reset Database
 
 To completely reset the database:
 
-1. Go to `http://localhost/Cineflix/init_db.php`
+1. Go to `http://localhost/Cineflix/setup/init_db.php`
 2. The script will drop and recreate all tables
-3. Run `check_setup.php` to verify
+3. Run `setup/check_setup.php` to verify
 
 ## 📱 Features
 
@@ -131,11 +131,11 @@ After setup, your Cineflix application includes:
 
 ## 🆘 Need Help?
 
-1. Run `config_check.php` to diagnose configuration issues
-2. Run `check_setup.php` to verify database setup
+1. Run `setup/config_check.php` to diagnose configuration issues
+2. Run `setup/check_setup.php` to verify database setup
 3. Check XAMPP error logs in the XAMPP control panel
 4. Ensure all XAMPP services are running
 
 ---
 
-**Ready to start?** Go to `http://localhost/Cineflix/config_check.php` to begin!
+**Ready to start?** Go to `http://localhost/Cineflix/setup/config_check.php` to begin!

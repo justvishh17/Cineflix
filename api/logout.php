@@ -1,9 +1,9 @@
 <?php
 // api/logout.php
 
-// The db_connect.php file starts the session, which is required
+// The config/db_connect.php file starts the session, which is required
 // before we can destroy it.
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // Unset all of the session variables.
 $_SESSION = array();

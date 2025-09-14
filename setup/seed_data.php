@@ -25,7 +25,7 @@ echo "<!DOCTYPE html>
         <h1>🎬 Cineflix Sample Data Generator</h1>";
 
 try {
-    require_once 'db_connect.php';
+    require_once '../config/db_connect.php';
     echo "<div class='success'>✅ Connected to database</div>";
 
     // Check if we should load the full SQL file data

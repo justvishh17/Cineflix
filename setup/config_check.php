@@ -169,7 +169,7 @@ echo "<h2>📁 File System Checks</h2>";
 // Check if key files exist
 $requiredFiles = [
     'index.php' => 'Main application entry point',
-    'db_connect.php' => 'Database connection configuration',
+    'config/db_connect.php' => 'Database connection configuration',
     'css/style.css' => 'Application stylesheets',
     'js/script.js' => 'Application JavaScript',
     'api/login.php' => 'Login API endpoint',

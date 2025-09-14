@@ -1,6 +1,6 @@
 
 <?php
-    require_once 'db_connect.php';
+    require_once 'config/db_connect.php';
 
     // This new query joins the media and likes tables to count the likes for each movie.
     $sql = "

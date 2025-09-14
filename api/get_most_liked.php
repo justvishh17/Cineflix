@@ -1,7 +1,7 @@
 <?php
 // api/get_most_liked.php
 header('Content-Type: application/json');
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // This SQL query counts the likes for each movie and returns the top 10.
 $sql = "

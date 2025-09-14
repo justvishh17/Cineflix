@@ -5,7 +5,7 @@
 header('Content-Type: application/json');
 
 // Include the database connection
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // --- Get data from the POST request ---
 $username = $_POST['username'] ?? '';

@@ -349,7 +349,7 @@ try {
             <strong>Troubleshooting:</strong><br>
             1. Make sure XAMPP Apache and MySQL are running<br>
             2. Check if MySQL is accessible on localhost:3306<br>
-            3. Verify the database credentials in db_connect.php<br>
+            3. Verify the database credentials in config/db_connect.php<br>
             4. Run this script again after fixing any issues
           </div>";
 } finally {

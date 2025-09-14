@@ -2,7 +2,7 @@
 // api/cancel_subscription.php (Correct Version)
 
 header('Content-Type: application/json');
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // 1. Security check: Ensure a user is logged in
 if (!isset($_SESSION['user'])) {

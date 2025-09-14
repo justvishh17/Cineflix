@@ -5,7 +5,7 @@
 header('Content-Type: application/json');
 
 // Include the database connection script, which also starts the session
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // --- Get username and password from the POST request ---
 $username = $_POST['username'] ?? '';

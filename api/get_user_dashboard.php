@@ -1,7 +1,7 @@
 <?php
 // api/get_user_dashboard.php
 header('Content-Type: application/json');
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 if (!isset($_SESSION['user'])) {
     echo json_encode(['success' => false, 'message' => 'Not logged in.']);

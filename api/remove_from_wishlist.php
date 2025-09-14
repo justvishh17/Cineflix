@@ -1,7 +1,7 @@
 <?php
 // api/remove_from_wishlist.php
 header('Content-Type: application/json');
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // --- Security: Ensure a user is logged in ---
 if (!isset($_SESSION['user'])) {

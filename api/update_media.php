@@ -5,7 +5,7 @@
 header('Content-Type: application/json');
 
 // Include the database connection, which also starts the session
-require_once '../db_connect.php';
+require_once '../config/db_connect.php';
 
 // --- Security Check: Ensure the user is an authenticated admin ---
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {

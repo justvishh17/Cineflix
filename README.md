@@ -133,13 +133,13 @@ A modern, full-featured streaming platform that brings the cinema experience to 
 3. **Initialize the database**:
 
    ```
-   http://localhost/Cineflix/init_db.php
+   http://localhost/Cineflix/setup/init_db.php
    ```
 
 4. **Verify setup**:
 
    ```
-   http://localhost/Cineflix/check_setup.php
+   http://localhost/Cineflix/setup/check_setup.php
    ```
 
 5. **Launch the application**:

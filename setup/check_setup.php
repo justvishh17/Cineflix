@@ -40,7 +40,7 @@ $overallStatus = true;
 echo "<h2>📡 Database Connection Tests</h2>";
 
 try {
-    require_once 'db_connect.php';
+    require_once '../config/db_connect.php';
     echo "<div class='check-item pass'>✅ <strong>Database Connection:</strong> Successfully connected to MySQL database 'cineflix'</div>";
     $checks['db_connection'] = true;
 } catch (Exception $e) {
