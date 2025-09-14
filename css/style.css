@@ -19,6 +19,40 @@
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Dashboard-specific grid styling */
+#watch-history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+#watch-history-grid .movie-card {
+    width: 180px;
+    height: 270px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    aspect-ratio: 2/3;
+}
+
+#watch-history-grid .movie-card:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 5px 5px 25px 5px rgba(229, 9, 20, 0.6);
+}
+
+#watch-history-grid .movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.4s ease-in-out;
+}
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .back-arrow { position: absolute;
             top: 20px; left: 20px;
             font-size: 1.5rem;
@@ -206,11 +240,11 @@
         }
         .movie-gallery { padding: 2rem 5%; background: transparent; }
         .movie-category { margin-bottom: 3rem; background: rgba(20,20,20,0.5); padding: 1.5rem; border-radius: 10px; backdrop-filter: blur(5px); }
-        .movie-grid { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 1.5rem; overflow-x: auto; padding-bottom: 1.5rem; }
+        .movie-grid { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 200px); gap: 1.5rem; overflow-x: auto; padding-bottom: 1.5rem; }
         .movie-grid::-webkit-scrollbar { height: 8px; }
         .movie-grid::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         .movie-grid::-webkit-scrollbar-track { background: transparent; }
-        .movie-card { position: relative; border-radius: 8px;top:18px; left:18px; overflow: hidden; cursor: pointer; transition: transform 0.4s ease, box-shadow 0.4s ease; aspect-ratio: 2/3; }
+        .movie-card { position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.4s ease, box-shadow 0.4s ease; aspect-ratio: 2/3; width: 180px; height: 270px; }
         .movie-card.highlight { box-shadow: 0 0 20px 5px #facc15; transform: scale(1.05); }
         .movie-card:hover { 
             transform: scale(1.05) translateY(-5px); 
@@ -612,6 +646,60 @@
     background-color: #16a34a !important; /* Green color for success */
     color: #fff !important;
     cursor: default;
+}
+
+/* Responsive movie card sizing */
+@media (max-width: 768px) {
+    .movie-grid { 
+        grid-auto-columns: minmax(150px, 160px); 
+        gap: 1rem; 
+    }
+    
+    .movie-card {
+        width: 150px;
+        height: 225px;
+    }
+    
+    #watch-history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+    
+    #watch-history-grid .movie-card {
+        width: 150px;
+        height: 225px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .movie-grid { 
+        grid-auto-columns: minmax(200px, 220px); 
+    }
+    
+    .movie-card {
+        width: 200px;
+        height: 300px;
+    }
+    
+    #watch-history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    #watch-history-grid .movie-card {
+        width: 200px;
+        height: 300px;
+    }
+}
+
+/* Button plan styles */
+.btn-plan {
+    background-color: #facc15 !important; /* A gold/yellow color */
+    color: var(--dark-color) !important;
+    font-weight: 600;
+}
+
+.btn-plan:hover {
+    background-color: #eab308 !important; /* A darker gold for hover */
 }
 
 

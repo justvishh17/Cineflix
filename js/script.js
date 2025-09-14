@@ -1,6 +1,43 @@
 // js/script.js - FINAL AND COMPLETE VERSION
 
 /**
+ * Displays a custom confirmation dialog (replaces browser confirm()).
+ * @param {string} message The confirmation message to display.
+ * @returns {Promise<boolean>} True if user clicks "Confirm", false if "Cancel".
+ */
+function showCustomConfirm(message) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirm-modal');
+        const messageEl = document.getElementById('confirm-message');
+        const yesBtn = document.getElementById('confirm-yes-btn');
+        const noBtn = document.getElementById('confirm-no-btn');
+
+        messageEl.textContent = message;
+        modal.classList.add('active');
+
+        function handleYes() {
+            modal.classList.remove('active');
+            cleanup();
+            resolve(true);
+        }
+
+        function handleNo() {
+            modal.classList.remove('active');
+            cleanup();
+            resolve(false);
+        }
+
+        function cleanup() {
+            yesBtn.removeEventListener('click', handleYes);
+            noBtn.removeEventListener('click', handleNo);
+        }
+
+        yesBtn.addEventListener('click', handleYes);
+        noBtn.addEventListener('click', handleNo);
+    });
+}
+
+/**
  * Displays a custom, non-blocking alert message.
  * @param {string} message The message to display.
  * @param {number} [duration=3000] How long the message stays visible in milliseconds.
@@ -148,6 +185,12 @@ function updateHeaderUI() {
         `;
         
         navLinks.innerHTML = loggedInLinks;
+        
+        // Update dashboard navigation if it exists
+        const dashboardNavLinks = document.getElementById('dashboard-nav-links');
+        if (dashboardNavLinks) {
+            dashboardNavLinks.innerHTML = loggedInLinks;
+        }
         
         const wishlistNav = document.getElementById('wishlist-nav-links');
         if(wishlistNav) wishlistNav.innerHTML = loggedInLinks;
@@ -565,37 +608,63 @@ async function handleRemoveFromWishlist(mediaId) {
 
 
 async function renderUserDashboard() {
+    console.log('renderUserDashboard called');
     showPage('user-dashboard');
-    const response = await fetch('api/get_user_dashboard.php');
-    const data = await response.json();
-    if (!data.success) {
-        showCustomAlert(data.message);
-        showPage('login');
-        return;
+    
+    try {
+        console.log('Fetching user dashboard data...');
+        const response = await fetch('api/get_user_dashboard.php');
+        const data = await response.json();
+        console.log('Dashboard API response:', data);
+        
+        if (!data.success) {
+            console.error('Dashboard API error:', data.message);
+            showCustomAlert(data.message);
+            showPage('login');
+            return;
+        }
+    
+    // Update user details
+    const profilePic = document.getElementById('dash-profile-pic');
+    if (profilePic) {
+        profilePic.src = data.userDetails.profile_pic_url || 'https://i.pravatar.cc/150?u=' + encodeURIComponent(data.userDetails.username);
+        profilePic.onerror = function() {
+            this.src = 'https://i.pravatar.cc/150?u=' + encodeURIComponent(data.userDetails.username);
+        };
     }
-    document.getElementById('dash-profile-pic').src = data.userDetails.profile_pic_url;
-    document.getElementById('dash-username').textContent = data.userDetails.username;
-    document.getElementById('dash-email').textContent = data.userDetails.email;
-    document.getElementById('dash-sub-status').textContent = `Subscription: ${data.userDetails.subscription}`;
+    
+    const usernameEl = document.getElementById('dash-username');
+    if (usernameEl) usernameEl.textContent = data.userDetails.username;
+    
+    const emailEl = document.getElementById('dash-email');
+    if (emailEl) emailEl.textContent = data.userDetails.email;
+    
+    const subStatusEl = document.getElementById('dash-sub-status');
+    if (subStatusEl) subStatusEl.textContent = `Subscription: ${data.userDetails.subscription}`;
+    
+    // Show/hide cancel subscription button
     const cancelBtn = document.getElementById('cancel-sub-btn');
     cancelBtn.classList.toggle('hidden', data.userDetails.subscription === 'None');
+    
+    // Render watch history
     const historyGrid = document.getElementById('watch-history-grid');
     historyGrid.innerHTML = '';
     if (data.watchHistory.length > 0) {
         data.watchHistory.forEach(movie => {
-            historyGrid.innerHTML += `<div class="movie-card" data-media-id="${movie.id}" data-title="${movie.title}"><img src="${movie.poster}" alt="${movie.title}"></div>`;
+            const movieCard = document.createElement('div');
+            movieCard.className = 'movie-card';
+            movieCard.dataset.mediaId = movie.id;
+            movieCard.dataset.title = movie.title;
+            movieCard.innerHTML = `<img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://placehold.co/300x450/141414/FFF?text=Poster+Not+Found'">`;
+            historyGrid.appendChild(movieCard);
         });
     } else {
-        historyGrid.innerHTML = '<p class="text-gray-400">Your watch history is empty.</p>';
+        historyGrid.innerHTML = '<p class="text-gray-400 text-center py-8">Your watch history is empty.</p>';
     }
-}
-
-async function handleCancelSubscription() {
-    if (confirm('Are you sure you want to cancel your subscription?')) {
-        const response = await fetch('api/cancel_subscription.php', { method: 'POST' });
-        const result = await response.json();
-        showCustomAlert(result.message);
-        if (result.success) renderUserDashboard();
+    } catch (error) {
+        console.error('Error in renderUserDashboard:', error);
+        showCustomAlert('Failed to load dashboard. Please try again.');
+        showPage('home');
     }
 }
 
@@ -672,11 +741,127 @@ async function renderAdminDashboard() {
     });
 }
 
-async function handleAddMedia(e) { /* ... form submission for adding media ... */ }
-async function handleEditMedia(e) { /* ... form submission for editing media ... */ }
-async function handleMediaTableClick(e) { /* ... logic for edit/delete media buttons ... */ }
-async function handleUsersTableClick(e) { /* ... logic for edit/delete user buttons ... */ }
-async function handleEditUser(e) { /* ... form submission for editing a user ... */ }
+async function handleAddMedia(e) { 
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', document.getElementById('add-media-title').value);
+    formData.append('year', document.getElementById('add-media-year').value);
+    formData.append('rating', document.getElementById('add-media-rating').value);
+    formData.append('poster', document.getElementById('add-media-poster').value);
+    formData.append('description', document.getElementById('add-media-desc').value);
+    formData.append('exclusive', document.getElementById('add-media-exclusive').checked ? 1 : 0);
+    formData.append('type', document.getElementById('add-media-type').checked ? 'web-series' : 'movie');
+
+    const response = await fetch('api/add_media.php', { method: 'POST', body: formData });
+    const result = await response.json();
+    showCustomAlert(result.message);
+    if (result.success) {
+        document.getElementById('add-media-form').reset();
+        renderAdminDashboard();
+    }
+}
+
+async function handleEditMedia(e) { 
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('id', document.getElementById('edit-media-id').value);
+    formData.append('title', document.getElementById('edit-media-title').value);
+    formData.append('year', document.getElementById('edit-media-year').value);
+    formData.append('rating', document.getElementById('edit-media-rating').value);
+    formData.append('poster', document.getElementById('edit-media-poster').value);
+    formData.append('description', document.getElementById('edit-media-desc').value);
+    formData.append('exclusive', document.getElementById('edit-media-exclusive').checked ? 1 : 0);
+    formData.append('type', document.getElementById('edit-media-type').checked ? 'web-series' : 'movie');
+
+    const response = await fetch('api/update_media.php', { method: 'POST', body: formData });
+    const result = await response.json();
+    showCustomAlert(result.message);
+    if (result.success) {
+        document.getElementById('edit-media-modal').classList.remove('active');
+        renderAdminDashboard();
+    }
+}
+
+async function handleMediaTableClick(e) { 
+    const editBtn = e.target.closest('.edit-btn');
+    const deleteBtn = e.target.closest('.delete-btn');
+    
+    if (editBtn) {
+        const mediaId = editBtn.dataset.id;
+        // Populate edit form with existing data
+        const media = movies.find(m => m.id == mediaId);
+        if (media) {
+            document.getElementById('edit-media-id').value = media.id;
+            document.getElementById('edit-media-title').value = media.title;
+            document.getElementById('edit-media-year').value = media.year;
+            document.getElementById('edit-media-rating').value = media.rating;
+            document.getElementById('edit-media-poster').value = media.poster;
+            document.getElementById('edit-media-desc').value = media.description;
+            document.getElementById('edit-media-exclusive').checked = media.exclusive == 1;
+            document.getElementById('edit-media-type').checked = media.type === 'web-series';
+            document.getElementById('edit-media-modal').classList.add('active');
+        }
+    }
+    
+    if (deleteBtn) {
+        const mediaId = deleteBtn.dataset.id;
+        const confirmed = await showCustomConfirm('Are you sure you want to delete this media?');
+        if (confirmed) {
+            const response = await fetch('api/delete_media.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: mediaId })
+            });
+            const result = await response.json();
+            showCustomAlert(result.message);
+            if (result.success) renderAdminDashboard();
+        }
+    }
+}
+
+async function handleUsersTableClick(e) { 
+    const editBtn = e.target.closest('.user-edit-btn');
+    const deleteBtn = e.target.closest('.user-delete-btn');
+    
+    if (editBtn) {
+        document.getElementById('edit-user-id').value = editBtn.dataset.id;
+        document.getElementById('edit-user-username').value = editBtn.dataset.username;
+        document.getElementById('edit-user-subscription').value = editBtn.dataset.subscription;
+        document.getElementById('edit-user-role').value = editBtn.dataset.role;
+        document.getElementById('edit-user-modal').classList.add('active');
+    }
+    
+    if (deleteBtn) {
+        const userId = deleteBtn.dataset.id;
+        const confirmed = await showCustomConfirm('Are you sure you want to delete this user?');
+        if (confirmed) {
+            const response = await fetch('api/delete_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: userId })
+            });
+            const result = await response.json();
+            showCustomAlert(result.message);
+            if (result.success) renderAdminDashboard();
+        }
+    }
+}
+
+async function handleEditUser(e) { 
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('id', document.getElementById('edit-user-id').value);
+    formData.append('subscription', document.getElementById('edit-user-subscription').value);
+    formData.append('role', document.getElementById('edit-user-role').value);
+
+    const response = await fetch('api/update_user.php', { method: 'POST', body: formData });
+    const result = await response.json();
+    showCustomAlert(result.message);
+    if (result.success) {
+        document.getElementById('edit-user-modal').classList.remove('active');
+        renderAdminDashboard();
+    }
+}
 
 
 // --- HELPER & AI FUNCTIONS ---

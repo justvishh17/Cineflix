@@ -384,11 +384,6 @@
                 <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
                 <div class="overflow-x-auto">
                     <table id="users-table" class="min-w-full">
-
-                    <div id="wishlist-category" class="movie-category" style="display: none;">
-        <h2 class="text-2xl font-bold mb-4">My Wishlist ❤️</h2>
-        <div id="wishlist-home-grid" class="movie-grid"></div>
-    </div>
     <thead>
         <tr>
             <th class="p-3">Username</th>

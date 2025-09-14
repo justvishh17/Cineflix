@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 require_once '../config/db_connect.php';
 
 // --- Security Check: Ensure the user is an authenticated admin ---
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] === 'super_admin') {
+if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] !== 'admin' && $_SESSION['user']['role'] !== 'super_admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
     exit();
 }
