@@ -127,9 +127,9 @@ function handleMovieGalleryClick(e) {
         return;
     }
 
-    // Handle click on the card itself
+    // Handle click on the card itself - open trailer popup
     if (!state.currentUser) {
-        showCustomAlert('Please log in to watch any movie or series.');
+        showCustomAlert('Please log in to watch trailers.');
         showPage('login');
         return;
     }
@@ -139,7 +139,9 @@ function handleMovieGalleryClick(e) {
         showPage('subscription');
         return;
     }
-    showCustomAlert(`Now playing: ${movie.title}`);
+    
+    // Open trailer popup
+    openTrailerPopup(movie);
     logToWatchHistory(mediaId);
 }
 

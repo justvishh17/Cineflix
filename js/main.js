@@ -75,6 +75,21 @@ function setupEventListeners() {
     document.getElementById('close-ai-modal')?.addEventListener('click', () => document.getElementById('ai-assistant-modal').classList.remove('active'));
     document.getElementById('ai-prompt-submit')?.addEventListener('click', handleAIAssistant);
 
+    // Trailer modal event listeners
+    document.getElementById('trailer-modal')?.addEventListener('click', e => {
+        // Close modal when clicking outside the content
+        if (e.target.id === 'trailer-modal') {
+            closeTrailerPopup();
+        }
+    });
+    
+    // Close trailer modal with Escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('trailer-modal').classList.contains('active')) {
+            closeTrailerPopup();
+        }
+    });
+
     // Setup admin event listeners
     setupAdminEventListeners();
 }
@@ -86,3 +101,46 @@ window.renderWishlistPage = renderWishlistPage;
 window.handleCancelSubscription = handleCancelSubscription;
 window.renderAdminDashboard = renderAdminDashboard;
 window.closePopupAndGoHome = closePopupAndGoHome;
+window.openTrailerPopup = openTrailerPopup;
+window.closeTrailerPopup = closeTrailerPopup;
+
+/**
+ * Opens the trailer popup with YouTube video
+ * @param {Object} movie The movie object containing title, year, and trailer info
+ */
+function openTrailerPopup(movie) {
+    const modal = document.getElementById('trailer-modal');
+    const title = document.getElementById('trailer-title');
+    const year = document.getElementById('trailer-year');
+    const iframe = document.getElementById('trailer-iframe');
+    
+    // Set movie details
+    title.textContent = movie.title;
+    year.textContent = movie.year;
+    
+    // Generate YouTube embed URL
+    // For now, we'll use a placeholder trailer ID if movie doesn't have trailer_url
+    const trailerId = movie.trailer_url || 'dQw4w9WgXcQ'; // Rick Roll as fallback
+    const embedUrl = `https://www.youtube.com/embed/${trailerId}?autoplay=1&rel=0&modestbranding=1`;
+    
+    iframe.src = embedUrl;
+    modal.classList.add('active');
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Closes the trailer popup and stops video
+ */
+function closeTrailerPopup() {
+    const modal = document.getElementById('trailer-modal');
+    const iframe = document.getElementById('trailer-iframe');
+    
+    // Stop video by clearing src
+    iframe.src = '';
+    modal.classList.remove('active');
+    
+    // Re-enable body scroll
+    document.body.style.overflow = '';
+}

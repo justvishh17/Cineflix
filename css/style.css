@@ -702,6 +702,88 @@
     background-color: #eab308 !important; /* A darker gold for hover */
 }
 
+/* Trailer Popup Styles */
+#trailer-modal {
+    z-index: 10000;
+}
+
+.trailer-popup-content {
+    background-color: #1a1a1a;
+    padding: 0;
+    width: 90%;
+    max-width: 900px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.trailer-popup-content .close-popup {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #fff;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10001;
+    background: rgba(0, 0, 0, 0.7);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.trailer-popup-content .close-popup:hover {
+    background: rgba(229, 9, 20, 0.8);
+}
+
+.trailer-header {
+    padding: 25px 25px 15px 25px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.trailer-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background: #000;
+}
+
+.trailer-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsive trailer popup */
+@media (max-width: 768px) {
+    .trailer-popup-content {
+        width: 95%;
+        max-width: none;
+    }
+    
+    .trailer-header {
+        padding: 20px 20px 10px 20px;
+    }
+    
+    .trailer-popup-content .close-popup {
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        width: 35px;
+        height: 35px;
+    }
+}
+
 
 
 

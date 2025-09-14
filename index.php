@@ -525,6 +525,19 @@
         </div>
     </div>
 </div>
+
+    <div id="trailer-modal" class="popup">
+        <div class="trailer-popup-content">
+            <span class="close-popup" onclick="closeTrailerPopup()">&times;</span>
+            <div class="trailer-header">
+                <h2 id="trailer-title" class="text-2xl font-bold mb-2">Movie Title</h2>
+                <p id="trailer-year" class="text-gray-400 mb-4">Year</p>
+            </div>
+            <div class="trailer-container">
+                <iframe id="trailer-iframe" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
     
     <!-- Load JavaScript modules in dependency order -->
     <script src="js/utilities.js"></script>
